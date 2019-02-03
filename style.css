@@ -40,15 +40,14 @@ button:hover {
 .game-column {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
 .game {
   display: flex;
-  min-height: 200px;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -256,10 +255,22 @@ button::-moz-focus-inner {
 }
 
 .welcome-screen {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-welcome-bits {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
+}
+
+.credits {
+  height: 34px;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 .main-title {

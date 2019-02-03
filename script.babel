@@ -1116,13 +1116,18 @@ class Game extends React.Component {
         ) : (
           // Not yet initialized
           <div className="welcome-screen">
-            <MainTitle />
-            <div className="buttons-row">
-              <ResetButton
-                label="New Game"
-                wide={true}
-                onClick={() => this.reset()}
-              />
+            <div className="main-welcome-bits">
+              <MainTitle />
+              <div className="buttons-row">
+                <ResetButton
+                  label="New Game"
+                  wide={true}
+                  onClick={() => this.reset()}
+                />
+              </div>
+            </div>
+            <div className="credits">
+              {"AdT 2019 - For Jake the Snake and Silky the Hamster"}
             </div>
           </div>
         )}

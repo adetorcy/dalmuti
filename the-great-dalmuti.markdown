@@ -1,6 +1,6 @@
 The Great Dalmuti
 -----------------
-
+Built with React, ES6 and JQuery. Enjoy!
 
 A [Pen](https://codepen.io/adetorcy/pen/GzKLvN) by [Antoine de Torcy](https://codepen.io/adetorcy) on [CodePen](https://codepen.io).
 

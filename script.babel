@@ -271,7 +271,9 @@ function ReadyMessage(props) {
   if (!props.active) {
     return null;
   }
-  return <div className="center-message play-prompt">Press play to start</div>;
+  return (
+      <div className="play-prompt">Press play to start</div>
+  );
 }
 
 class Game extends React.Component {

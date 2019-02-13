@@ -289,9 +289,12 @@ button::-moz-focus-inner {
   animation: fallDown 1s ease;
 }
 
+.center-message {
+  margin-bottom: 1em;  
+}
+
 .play-prompt {
   animation: blink 3s ease infinite;
-  height: 2em;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;

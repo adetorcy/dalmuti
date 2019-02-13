@@ -271,9 +271,7 @@ function ReadyMessage(props) {
   if (!props.active) {
     return null;
   }
-  return (
-      <div className="play-prompt">Press play to start</div>
-  );
+  return <div className="play-prompt">Press play for the game to start</div>;
 }
 
 class Game extends React.Component {
@@ -355,20 +353,18 @@ class Game extends React.Component {
     return () => this.play();
   }
 
+  getPassButtonOnClick() {
+    if (this.state.taxSeason) {
+      return () => this.payTaxes();
+    }
+    return () => this.play();
+  }
+
   getPlayButtonStatus() {
     if (
       this.state.upNext === "person" &&
       !this.state.person.every(x => !x) && // Not all cards are zeroes
       this.state.selected.includes(true)
-    ) {
-      return true;
-    }
-    if (
-      // If the person is the merchant during tax season they need
-      // to be able click play to move on
-      this.state.taxSeason &&
-      !this.state.selected.includes(true) &&
-      this.state.ranks[0] === 2
     ) {
       return true;
     }
@@ -395,8 +391,14 @@ class Game extends React.Component {
   }
 
   getPassButtonStatus() {
-    if (this.state.taxSeason || this.state.ready) {
-      return false;
+    if (
+      // If the person is the merchant during tax season they need
+      // to be able click plass to move on
+      this.state.taxSeason &&
+      !this.state.selected.includes(true) &&
+      this.state.ranks[0] === 2
+    ) {
+      return true;
     }
     if (
       this.state.upNext === "person" &&
@@ -417,8 +419,8 @@ class Game extends React.Component {
     const gdIndex = this.state.ranks.indexOf(0);
 
     this.setState(state => ({
-      taxSeason: !state.taxSeason,
-      ready: !state.ready,
+      taxSeason: false,
+      ready: true,
       callingRevolution: rank,
       selected: Array(state.person.length).fill(false),
       upNext: gdIndex > 0 ? `bot${gdIndex}` : "person"
@@ -426,12 +428,12 @@ class Game extends React.Component {
   }
 
   startRound() {
-    // Revolution
+    // Get out of ready or revolution state
     this.setState(
-      state => ({
-        ready: !state.ready,
+      {
+        ready: false,
         callingRevolution: null
-      }),
+      },
       // Now the game starts
       () => this.turn()
     );
@@ -623,17 +625,21 @@ class Game extends React.Component {
       console.log(`GP cards: ${newCards[4].toString()}`);
     }
 
-    this.setState(state => ({
-      taxSeason: !state.taxSeason,
-      ready: !state.ready,
-      selected: Array(state.person.length).fill(false),
-      person: newCards[this.state.ranks[0]],
-      bot1: newCards[this.state.ranks[1]],
-      bot2: newCards[this.state.ranks[2]],
-      bot3: newCards[this.state.ranks[3]],
-      bot4: newCards[this.state.ranks[4]],
-      upNext: gdIndex > 0 ? `bot${gdIndex}` : "person"
-    }));
+    this.setState(
+      state => ({
+        taxSeason: false,
+        ready: true,
+        selected: Array(state.person.length).fill(false),
+        person: newCards[state.ranks[0]],
+        bot1: newCards[state.ranks[1]],
+        bot2: newCards[state.ranks[2]],
+        bot3: newCards[state.ranks[3]],
+        bot4: newCards[state.ranks[4]],
+        upNext: gdIndex > 0 ? `bot${gdIndex}` : "person"
+      }),
+      // Skip the ready state if person is the GD
+      this.state.ranks[0] === 0 ? () => this.startRound() : null
+    );
   }
   // ========= END PAY TAXES ==============
 
@@ -1082,7 +1088,7 @@ class Game extends React.Component {
               />
               <div className="buttons-row">
                 <PlayerButton
-                  onClick={() => this.play()}
+                  onClick={this.getPassButtonOnClick()}
                   active={this.getPassButtonStatus()}
                   label="Pass"
                 />
@@ -1095,7 +1101,6 @@ class Game extends React.Component {
                 <PlayerButton
                   onClick={() => this.clearSelection()}
                   active={
-                    this.state.upNext === "person" &&
                     !this.state.person.every(x => !x) && // Not all cards are zeroes
                     this.state.selected.includes(true)
                   }

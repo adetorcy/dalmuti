@@ -102,10 +102,10 @@ function BotName(props) {
 function Bot(props) {
   return (
     <div className="bot">
-      {props.finalRank ? (
-        <BotMessage index={props.index} rank={props.finalRank} />
+      {props.endRank >= 0 ? (
+        <BotMessage index={props.index} rank={getRankName(props.endRank)} />
       ) : (
-        <BotName rank={props.rank} playing={props.playing} />
+        <BotName rank={props.startRank} playing={props.playing} />
       )}
       <BotHand cards={props.cards} showCards={props.showCards} />
     </div>
@@ -114,22 +114,40 @@ function Bot(props) {
 
 function BotMessage(props) {
   return (
-    <div className="rank">
-      {props.rank}
-      {props.rank === "Great Dalmuti" ? "!!" : null}
+    <div className="rank bot-rank">
+      <nobr>
+        {props.rank}
+        {props.rank === "Great Dalmuti" ? "!!" : null}
+      </nobr>
     </div>
   );
 }
 
+function PlayerFace(props) {
+  const face = ["😔", "😎", "😌", "😒", "😥", "😱"][props.rank + 1]; // Covers case where rank is -1
+  return <div className="player-face">{face}</div>;
+}
+
 function PlayerRank(props) {
-  if (!props.greeting) {
+  // If the person doesn't have a finishing rank, display their starting rank
+  if (props.finish < 0) {
     return (
       <div className={props.playing ? "player-label" : "restive player-label"}>
-        {getRankName(props.rank)}
+        {getRankName(props.start)}
       </div>
     );
   }
-  return <div className="rank">{props.greeting}</div>;
+
+  // Determine message based on finishing rank
+  const message = [
+    "Congratulations, you are the Great Dalmuti!",
+    "Not bad, you are the Lesser Dalmuti.",
+    "You are the Merchant. Try harder.",
+    "Bad luck, you are the Lesser Peon.",
+    "Oh no! You are the Greater Peon!"
+  ][props.finish];
+
+  return <div className="rank">{message}</div>;
 }
 
 function Move(props) {
@@ -842,43 +860,6 @@ class Game extends React.Component {
     return this.state.out.length === 5;
   }
 
-  getFinalStatus(player) {
-    const rank = this.state.out.indexOf(player);
-
-    // TODO: only return rank (int). Move the rest into react components.
-    if (rank >= 0) {
-      return {
-        0: {
-          face: "😎",
-          greeting: "Congratulations, you are the Great Dalmuti!",
-          rank: "Great Dalmuti"
-        },
-        1: {
-          face: "😌",
-          greeting: "Not bad, you are the Lesser Dalmuti.",
-          rank: "Lesser Dalmuti"
-        },
-        2: {
-          face: "😒",
-          greeting: "You are the Merchant. Try harder.",
-          rank: "Merchant"
-        },
-        3: {
-          face: "😥",
-          greeting: "Bad luck, you are the Lesser Peon.",
-          rank: "Lesser Peon"
-        },
-        4: {
-          face: "😱",
-          greeting: "Oh no! You are the Greater Peon!",
-          rank: "Greater Peon"
-        }
-      }[rank];
-    }
-
-    return { face: "😔", greeting: null, rank: null };
-  }
-
   pass(player, out = false) {
     const playerRank = this.getPlayerRankName(player);
     const moveNumber = this.getMoveNumber();
@@ -1045,18 +1026,18 @@ class Game extends React.Component {
                 <Bot
                   cards={this.state.bot2}
                   index={2}
-                  rank={this.state.ranks[2]}
+                  startRank={this.state.ranks[2]}
                   playing={this.state.upNext === "bot2"}
-                  finalRank={this.getFinalStatus("bot2").rank}
+                  endRank={this.state.out.indexOf("bot2")}
                   showCards={this.state.showCards}
                 />
 
                 <Bot
                   cards={this.state.bot1}
                   index={1}
-                  rank={this.state.ranks[1]}
+                  startRank={this.state.ranks[1]}
                   playing={this.state.upNext === "bot1"}
-                  finalRank={this.getFinalStatus("bot1").rank}
+                  endRank={this.state.out.indexOf("bot1")}
                   showCards={this.state.showCards}
                 />
               </div>
@@ -1083,30 +1064,28 @@ class Game extends React.Component {
                 <Bot
                   cards={this.state.bot3}
                   index={3}
-                  rank={this.state.ranks[3]}
+                  startRank={this.state.ranks[3]}
                   playing={this.state.upNext === "bot3"}
-                  finalRank={this.getFinalStatus("bot3").rank}
+                  endRank={this.state.out.indexOf("bot3")}
                   showCards={this.state.showCards}
                 />
 
                 <Bot
                   cards={this.state.bot4}
                   index={4}
-                  rank={this.state.ranks[4]}
+                  startRank={this.state.ranks[4]}
                   playing={this.state.upNext === "bot4"}
-                  finalRank={this.getFinalStatus("bot4").rank}
+                  endRank={this.state.out.indexOf("bot4")}
                   showCards={this.state.showCards}
                 />
               </div>
             </div>
-            <div className="player-face">
-              {this.getFinalStatus("person").face}
-            </div>
+            <PlayerFace rank={this.state.out.indexOf("person")} />
             <div className="player-view">
               <PlayerRank
-                greeting={this.getFinalStatus("person").greeting}
+                start={this.state.ranks[0]}
+                finish={this.state.out.indexOf("person")}
                 playing={this.state.upNext === "person"}
-                rank={this.state.ranks[0]}
               />
               <PlayerHand
                 cards={this.state.person}

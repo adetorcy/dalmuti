@@ -77,6 +77,11 @@ button:hover {
   text-align: center;
 }
 
+.bot-rank::before {
+  margin-right: 4px;
+  content: "🏁";
+}
+
 /* .bot-name,
 .player-label,
 .rank {
@@ -290,7 +295,7 @@ button::-moz-focus-inner {
 }
 
 .center-message {
-  margin-bottom: 1em;  
+  margin-bottom: 1em;
 }
 
 .play-prompt {

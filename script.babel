@@ -278,6 +278,8 @@ class Game extends React.Component {
   constructor(props) {
     super(props);
 
+    this.timeoutIDs = [];
+
     this.state = {
       initialized: false,
       showCards: false,
@@ -287,6 +289,9 @@ class Game extends React.Component {
   }
 
   reset(newGame = true) {
+    // Abort any delayed turns
+    this.clearTimeouts();
+
     // Init cards
     const cards = initDeck();
     shuffle(cards);
@@ -335,8 +340,14 @@ class Game extends React.Component {
       moves: [], // current round
       history: [], // past rounds
       out: [], // who has gone out
-      upNext: null //"person" // whose turn it is
+      upNext: null // whose turn it is
     }));
+  }
+
+  clearTimeouts() {
+    for (const timeoutID of this.timeoutIDs) {
+      clearTimeout(timeoutID);
+    }
   }
 
   getPlayButtonOnClick() {
@@ -755,7 +766,11 @@ class Game extends React.Component {
         // callback
         () => {
           slideDown("moves", this.state.delay / 2);
-          setTimeout(() => this.turn(nextState), this.state.delay);
+          const timeoutID = setTimeout(
+            () => this.turn(nextState),
+            this.state.delay
+          );
+          this.timeoutIDs.push(timeoutID);
         }
       );
 
@@ -804,7 +819,11 @@ class Game extends React.Component {
       // callback
       () => {
         slideDown("moves", this.state.delay / 2);
-        setTimeout(() => this.turn(nextState), this.state.delay);
+        const timeoutID = setTimeout(
+          () => this.turn(nextState),
+          this.state.delay
+        );
+        this.timeoutIDs.push(timeoutID);
       }
     );
   }
@@ -881,7 +900,11 @@ class Game extends React.Component {
       !out
         ? () => {
             slideDown("moves", this.state.delay / 2);
-            setTimeout(() => this.turn(nextState), this.state.delay);
+            const timeoutID = setTimeout(
+              () => this.turn(nextState),
+              this.state.delay
+            );
+            this.timeoutIDs.push(timeoutID);
           }
         : () => this.turn(nextState)
     );
@@ -999,7 +1022,11 @@ class Game extends React.Component {
       // callback
       () => {
         slideDown("moves", this.state.delay / 2);
-        setTimeout(() => this.turn(nextState), this.state.delay);
+        const timeoutID = setTimeout(
+          () => this.turn(nextState),
+          this.state.delay
+        );
+        this.timeoutIDs.push(timeoutID);
       }
     );
   }

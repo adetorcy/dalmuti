@@ -138,12 +138,13 @@ function PlayerRank(props) {
   }
 
   // Determine message based on finishing rank
+  const adverb = props.start === props.finish ? "still" : "now";
   const message = [
-    "Congratulations, you are the Great Dalmuti!",
-    "Not bad, you are the Lesser Dalmuti.",
-    "You are the Merchant. Try harder.",
-    "Bad luck, you are the Lesser Peon.",
-    "Oh no! You are the Greater Peon!"
+    `Congratulations, you are ${adverb} the Great Dalmuti!`,
+    `You didn't win but that's ok. You are ${adverb} the Lesser Dalmuti.`,
+    `You are ${adverb} the Merchant. Try harder.`,
+    `Bad luck, you are ${adverb} the Lesser Peon.`,
+    `Oh no! You are ${adverb} the Greater Peon!`
   ][props.finish];
 
   return <div className="rank">{message}</div>;

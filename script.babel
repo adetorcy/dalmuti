@@ -116,8 +116,7 @@ function BotMessage(props) {
   return (
     <div className="rank bot-rank">
       <nobr>
-        {props.rank}
-        {props.rank === "Great Dalmuti" ? "!!" : null}
+        {props.rank === "Great Dalmuti" ? `${props.rank}!!` : props.rank}
       </nobr>
     </div>
   );

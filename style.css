@@ -106,7 +106,7 @@ button:hover {
 .top-message {
   /* hide it without affecting offset */
   /* top-message is a hidden placeholder for now */
-  visibility: hidden;
+  opacity: 0;
 }
 
 .player-hand {
@@ -169,7 +169,7 @@ button:hover {
 .dead-card:hover {
   cursor: default;
   background: transparent;
-  opacity: 0.2;
+  opacity: 0.4;
 }
 
 .center-panel {
@@ -255,7 +255,7 @@ button::-moz-focus-inner {
 .player-button:disabled {
   cursor: default;
   background: transparent;
-  opacity: 0.2;
+  opacity: 0.4;
 }
 
 /* Shake animation */

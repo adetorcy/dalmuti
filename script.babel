@@ -1326,7 +1326,7 @@ function getName(rawName) {
   if (!rawName) {
     return "";
   }
-  return rawName === "person" ? "you" : rawName;
+  return rawName === "person" ? "You" : rawName;
   //return rawName === "person" ? "you" : rawName.replace(/bot/i, "player");
 }
 

@@ -99,14 +99,14 @@ button:hover {
 .player-label::after {
   margin-left: 4px;
   content: "👈";
-  opacity: 0;
+  visibility: hidden;
 }
 
 .restive::before,
 .top-message {
   /* hide it without affecting offset */
   /* top-message is a hidden placeholder for now */
-  opacity: 0;
+  visibility: hidden;
 }
 
 .player-hand {
@@ -180,7 +180,6 @@ button:hover {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
   overflow-y: hidden;
   overflow-x: auto;
   width: 260px;
@@ -189,10 +188,8 @@ button:hover {
 
 .moves {
   display: flex;
-  width: 100%;
   flex-direction: column-reverse;
   justify-content: flex-end;
-  align-items: center;
 }
 
 .slide-in {
@@ -210,9 +207,16 @@ button:hover {
   content: "";
 } */
 
+.move {
+  text-align: center;
+}
+
 .previous-move {
   opacity: 0;
   animation: fadeOut 0.25s linear;
+  /* To avoid scrollbar from hidden previous moves */
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .buttons-row {

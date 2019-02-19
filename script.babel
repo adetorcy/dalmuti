@@ -1,5 +1,13 @@
 const DEBUG = true;
 
+// Enum for possible game phases
+const Phases = Object.freeze({
+  TAXES: Symbol("taxes"),
+  READY: Symbol("ready"),
+  ONGOING: Symbol("ongoing"),
+  OVER: Symbol("over")
+});
+
 function Card(props) {
   let classNames = "card";
   let value;
@@ -183,6 +191,10 @@ function Move(props) {
 }
 
 function Moves(props) {
+  if (!props.active) {
+    return null;
+  }
+
   const moves = [];
 
   const addMoves = (dest, src, previous = false) => {
@@ -292,6 +304,13 @@ function ReadyMessage(props) {
   return <div className="play-prompt">Press play for the game to start</div>;
 }
 
+function Score(props) {
+  if (!props.active) {
+    return null;
+  }
+  return <div className="score">{`Score: ${props.score}`}</div>;
+}
+
 class Game extends React.Component {
   constructor(props) {
     super(props);
@@ -345,8 +364,7 @@ class Game extends React.Component {
 
     this.setState(state => ({
       initialized: true,
-      taxSeason: true,
-      ready: false,
+      phase: Phases.TAXES,
       callingRevolution: null, // rank of player calling it
       ranks: ranks,
       person: players[0],
@@ -358,6 +376,7 @@ class Game extends React.Component {
       moves: [], // current round
       history: [], // past rounds
       out: [], // who has gone out
+      score: 0, // final score
       upNext: null // whose turn it is
     }));
   }
@@ -369,10 +388,10 @@ class Game extends React.Component {
   }
 
   getPlayButtonOnClick() {
-    if (this.state.taxSeason) {
+    if (this.state.phase === Phases.TAXES) {
       return () => this.payTaxes();
     }
-    if (this.state.ready) {
+    if (this.state.phase === Phases.READY) {
       return () => this.startRound();
     }
     if (this.everyoneOut()) {
@@ -383,7 +402,7 @@ class Game extends React.Component {
   }
 
   getPassButtonOnClick() {
-    if (this.state.taxSeason) {
+    if (this.state.phase === Phases.TAXES) {
       return () => this.payTaxes();
     }
     return () => this.play();
@@ -399,14 +418,14 @@ class Game extends React.Component {
     }
     if (
       // It's tax season and the person has selected cards
-      this.state.taxSeason &&
+      this.state.phase === Phases.TAXES &&
       this.state.selected.includes(true)
     ) {
       return true;
     }
     if (
       // We're done with taxes and ready to start
-      this.state.ready
+      this.state.phase === Phases.READY
     ) {
       return true;
     }
@@ -423,7 +442,7 @@ class Game extends React.Component {
     if (
       // If the person is the merchant during tax season they need
       // to be able click plass to move on
-      this.state.taxSeason &&
+      this.state.phase === Phases.TAXES &&
       !this.state.selected.includes(true) &&
       this.state.ranks[0] === 2
     ) {
@@ -441,6 +460,25 @@ class Game extends React.Component {
     return false;
   }
 
+  getScore() {
+    // Each card of value x left in a bot's hand is worth (14-x)^2
+    // Jester is worth 1 for now...
+    pointsPerCard = card => (14 - card) ** 2;
+
+    // Sum per bot
+    pointsPerBot = bot =>
+      bot.reduce((sum, card) => sum + pointsPerCard(card), 0);
+
+    // Sum for all bots
+    const bots = [
+      this.state.bot1,
+      this.state.bot2,
+      this.state.bot3,
+      this.state.bot4
+    ];
+    return bots.reduce((sum, bot) => sum + pointsPerBot(bot), 0);
+  }
+
   revolution(rank) {
     // Someone is calling a revolution
 
@@ -448,8 +486,7 @@ class Game extends React.Component {
     const gdIndex = this.state.ranks.indexOf(0);
 
     this.setState(state => ({
-      taxSeason: false,
-      ready: true,
+      phase: Phases.READY,
       callingRevolution: rank,
       selected: Array(state.person.length).fill(false),
       upNext: gdIndex > 0 ? `bot${gdIndex}` : "person"
@@ -460,7 +497,7 @@ class Game extends React.Component {
     // Get out of ready or revolution state
     this.setState(
       {
-        ready: false,
+        phase: Phases.ONGOING,
         callingRevolution: null
       },
       // Now the game starts
@@ -656,8 +693,7 @@ class Game extends React.Component {
 
     this.setState(
       state => ({
-        taxSeason: false,
-        ready: true,
+        phase: Phases.READY,
         selected: Array(state.person.length).fill(false),
         person: newCards[state.ranks[0]],
         bot1: newCards[state.ranks[1]],
@@ -765,6 +801,7 @@ class Game extends React.Component {
   play() {
     const move = [];
     const moveNumber = this.getMoveNumber();
+    let score = this.state.score;
 
     // Argument for turn()
     const nextState = { upNext: getNextPlayer("person") };
@@ -810,7 +847,6 @@ class Game extends React.Component {
     // Check for valid play before updating state
     if (!this.isValidPlay(move)) {
       shakePlayButton();
-
       return;
     }
 
@@ -818,6 +854,7 @@ class Game extends React.Component {
     const out = this.state.out.slice();
     if (cards.every(x => !x)) {
       out.push("person");
+      score = this.getScore();
     }
 
     // Update game state
@@ -832,6 +869,7 @@ class Game extends React.Component {
         ]),
         person: cards,
         selected: Array(cards.length).fill(false),
+        score: score,
         out: out
       }),
       // callback
@@ -906,11 +944,21 @@ class Game extends React.Component {
     // Is everyone out?
     if (this.everyoneOut()) {
       // Clear the moves stack
-      this.setState(state => ({
-        history: state.history.concat([state.moves]),
-        moves: [],
-        upNext: null
-      }));
+      this.setState(
+        state => ({
+          history: state.history.concat([state.moves]),
+          moves: [],
+          upNext: null
+        }),
+        // Callback: update game phase after delay to allow for fade out
+        () => {
+          const timeoutID = setTimeout(
+            () => this.setState({ phase: Phases.OVER }),
+            this.state.delay
+          );
+          this.timeoutIDs.push(timeoutID);
+        }
+      );
       return;
     }
 
@@ -1045,16 +1093,21 @@ class Game extends React.Component {
                 <div className="top-message">Message</div>
                 <div className="center-panel">
                   <TaxMessage
-                    active={this.state.taxSeason}
+                    active={this.state.phase === Phases.TAXES}
                     rank={this.state.ranks[0]}
                   />
                   <RevolutionMessage
                     active={this.state.callingRevolution != null}
                     rank={this.state.callingRevolution}
                   />
-                  <ReadyMessage active={this.state.ready} />
+                  <ReadyMessage active={this.state.phase === Phases.READY} />
+                  <Score
+                    active={this.state.phase === Phases.OVER}
+                    score={this.state.score}
+                  />
                   <Moves
                     id="moves"
+                    active={this.state.phase === Phases.ONGOING}
                     moves={this.state.moves}
                     history={this.state.history}
                   />

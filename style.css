@@ -211,6 +211,12 @@ button:hover {
   text-align: center;
 }
 
+.score {
+  text-align: center;
+  margin-top: 1em;
+  transition: 0.25s ease;
+}
+
 .previous-move {
   opacity: 0;
   animation: fadeOut 0.25s linear;

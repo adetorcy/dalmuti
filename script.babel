@@ -463,10 +463,10 @@ class Game extends React.Component {
   getScore() {
     // Each card of value x left in a bot's hand is worth (14-x)^2
     // Jester is worth 1 for now...
-    pointsPerCard = card => (14 - card) ** 2;
+    const pointsPerCard = card => (14 - card) ** 2;
 
     // Sum per bot
-    pointsPerBot = bot =>
+    const pointsPerBot = bot =>
       bot.reduce((sum, card) => sum + pointsPerCard(card), 0);
 
     // Sum for all bots
@@ -605,7 +605,7 @@ class Game extends React.Component {
     }
 
     // Validate the person's taxes based on their rank
-    pRank = this.state.ranks[0];
+    const pRank = this.state.ranks[0];
 
     // Two jesters?
     if (personTaxes.length === 2 && personTaxes.every(card => card === 13)) {

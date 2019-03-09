@@ -715,7 +715,7 @@ class Game extends React.Component {
   }
 
   selectCard(index) {
-    selected = this.state.selected.slice();
+    const selected = this.state.selected.slice();
 
     // Toggle selection
     selected[index] = !selected[index];

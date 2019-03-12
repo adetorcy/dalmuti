@@ -67,8 +67,8 @@ function PlayerButton(props) {
 function ResetButton(props) {
   let classNames = "reset-button";
 
-  if (props.wide) {
-    classNames += " wide-button";
+  if (props.welcome) {
+    classNames += " welcome-button wide-button";
   }
 
   return (
@@ -1187,7 +1187,7 @@ class Game extends React.Component {
               <div className="buttons-row">
                 <ResetButton
                   label="New Game"
-                  wide={true}
+                  welcome={true}
                   onClick={() => this.reset()}
                 />
               </div>

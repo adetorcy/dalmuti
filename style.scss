@@ -1,8 +1,14 @@
 $color_bg: hsla(225, 30%, 20%, 1);
 $color_primary: white;
-$color_outer_border: hsla(60, 60%, 50%, 1);
-$color_game_bg: hsla(170, 20%, 20%, 1);
-$color_bg_card: hsla(200, 50%, 50%, 1);
+$color_outer_border: hsla(60, 60%, 60%, 1);
+$color_game_bg: hsla(300, 20%, 30%, 1);
+$color_center_panel_bg: hsla(227, 12%, 30%, 1);//hsla(0, 0%, 30%, 1);
+// hsla(200, 60%, 30%, 1); // hsla(170, 20%, 20%, 1);
+$color_bg_card_front: hsla(200, 70%, 70%, 1);
+  //hsla(0, 0%, 15%, 1); // hsla(200, 50%, 50%, 1);
+$color_bg_card_back: hsla(0, 0%, 15%, 1);
+$color_card_front: hsla(0, 0%, 30%, 1);
+$color_button: lighten($color_bg, 10%);
 
 body {
   background-color: $color_bg;
@@ -11,19 +17,23 @@ body {
   margin: 20px;
 }
 
-/* Disable outline for all buttons */
-button:focus,
-button:active {
-  outline: none;
-}
-
 button {
   transition: 0.25s ease;
+  background: $color_button;
+&:hover {
+  background: lighten($color_button, 10%);
 }
-
-button:hover {
-  // background: grey;
-  background: lighten($color_bg, 10%)
+  
+  &::-moz-focus-inner {
+  border: 0;
+}
+  
+  /* Disable outline for all buttons */
+&:focus,
+&:active {
+  outline: none;
+}
+  
 }
 
 .game-contents {
@@ -123,6 +133,7 @@ button:hover {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  margin-top: 10px;
   margin-bottom: 20px;
 }
 
@@ -138,43 +149,47 @@ button:hover {
   cursor: pointer;
   /* Need to inherit properties since cards are buttons */
   font-family: inherit;
-  color: inherit;
-  // background: transparent;
-  background: $color_bg_card;
+  color: $color_card_front;
+  background: $color_bg_card_front;
   border: 1px solid;
-  border-color: $color_bg_card;
+  border-color: $color_bg_card_front;
   border-radius: 5px;
   font-size: 22px;
-  font-weight: normal;
+  font-weight: bold;
   height: 42px;
   width: 34px;
   margin: 1px;
   display: flex;
   justify-content: center;
   align-items: center;
-}
 
-.card:hover {
-  border-color: darken($color_bg_card, 10%); 
-  background: darken($color_bg_card, 10%);  
+
+&:hover {
+  border-color: lighten($color_bg_card_front, 20%); 
+  background: lighten($color_bg_card_front, 20%);  
+}
 }
 
 .selected-card {
-  background: silver;
-  border-color: silver;
-  color: #1d1e22;
+  // background: $color_primary;
+  // color: $color_bg_card_front;
+  // border-color: $color_primary;
+  transform: translateY(-10px);
 }
 
 .selected-card:hover {
-  // border-color: grey;
-  // background: grey;
-  background: darken($color_primary, 10%);
+    border-color: lighten($color_bg_card_front, 20%); 
+  background: lighten($color_bg_card_front, 20%); 
+  // border-color: darken($color_primary, 10%);
+  // background: darken($color_primary, 10%);
 }
 
 .bot-card {
   font-size: 18px;
   border: 1px solid;
   border-radius: 5px;
+  border-color: $color_bg_card_back;
+  background: $color_bg_card_back;
   height: 30px;
   width: 24px;
   margin: 1px;
@@ -186,6 +201,8 @@ button:hover {
 .dead-card,
 .dead-card:hover {
   cursor: default;
+  font-weight: normal;
+  color: $color_primary;
   background: transparent;
   opacity: 0.4;
 }
@@ -194,6 +211,7 @@ button:hover {
   cursor: default;
   border: 2px solid #999;
   border-radius: 4px;
+  background: $color_center_panel_bg;
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -240,7 +258,6 @@ button:hover {
   animation: fadeOut 0.25s linear;
   /* To avoid scrollbar from hidden previous moves */
   max-width: 100%;
-  overflow: hidden;
 }
 
 .buttons-row {
@@ -259,9 +276,9 @@ button:hover {
   cursor: pointer;
   font-family: inherit;
   color: inherit;
-  background: inherit;
+  // background: inherit;
   border-width: 1px;
-  border-radius: 4px;
+  border-radius: 2px;
   width: 100px;
   font-size: 14px;
   margin-left: 10px;
@@ -272,14 +289,22 @@ button:hover {
   width: 120px;
 }
 
-button::-moz-focus-inner {
-  border: 0;
+.welcome-button {
+  background: $color_game_bg;
+  
+  &:hover {
+    background: lighten($color_game_bg, 10%)
+  }
 }
 
 .player-button:disabled {
   cursor: default;
-  background: transparent;
-  opacity: 0.4;
+  //background: transparent;
+  opacity: 0.3;
+  
+    &:hover {
+    background: $color_button;
+  }
 }
 
 /* Shake animation */

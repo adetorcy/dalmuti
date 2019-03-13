@@ -169,9 +169,6 @@ button {
 }
 
 .selected-card {
-  // background: $color_primary;
-  // color: $color_bg_card_front;
-  // border-color: $color_primary;
   transform: translateY(-10px);
 }
 
@@ -194,6 +191,7 @@ button {
   cursor: default;
   font-weight: normal;
   color: $color_primary;
+  border-color: $color_bg_card_back;
   background: transparent;
   opacity: 0.4;
 }

@@ -440,6 +440,13 @@ class Game extends React.Component {
 
   getPassButtonStatus() {
     if (
+      // Should be disabled if the person just played
+      this.state.moves.length &&
+      this.state.moves.slice(-1)[0].name === "person"
+    ) {
+      return false;
+    }
+    if (
       // If the person is the merchant during tax season they need
       // to be able click plass to move on
       this.state.phase === Phases.TAXES &&

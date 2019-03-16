@@ -2,10 +2,8 @@ $color_bg: hsla(225, 30%, 20%, 1);
 $color_primary: white;
 $color_outer_border: hsla(60, 60%, 60%, 1);
 $color_game_bg: hsla(300, 20%, 30%, 1);
-$color_center_panel_bg: hsla(227, 12%, 30%, 1); //hsla(0, 0%, 30%, 1);
-// hsla(200, 60%, 30%, 1); // hsla(170, 20%, 20%, 1);
+$color_center_panel_bg: hsla(227, 12%, 30%, 1);
 $color_bg_card_front: hsla(200, 70%, 70%, 1);
-//hsla(0, 0%, 15%, 1); // hsla(200, 50%, 50%, 1);
 $color_bg_card_back: hsla(0, 0%, 15%, 1);
 $color_card_front: hsla(0, 0%, 30%, 1);
 $color_button: lighten($color_bg, 10%);
@@ -143,24 +141,29 @@ button {
   align-items: center;
 }
 
+@mixin cardFaceColors {
+  color: $color_card_front;
+  background: $color_bg_card_front;
+  border-color: $color_bg_card_front;
+  font-weight: bold;
+}
+
 .card {
   transition: 0.2s ease;
   cursor: pointer;
   /* Need to inherit properties since cards are buttons */
   font-family: inherit;
-  color: $color_card_front;
-  background: $color_bg_card_front;
   border: 1px solid;
-  border-color: $color_bg_card_front;
   border-radius: 5px;
   font-size: 22px;
-  font-weight: bold;
   height: 42px;
   width: 34px;
   margin: 1px;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @include cardFaceColors;
 
   &:hover {
     border-color: lighten($color_bg_card_front, 30%);
@@ -184,6 +187,10 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  &--face {
+    @include cardFaceColors;
+  }
 }
 
 .dead-card,
@@ -193,7 +200,7 @@ button {
   color: $color_primary;
   border-color: $color_bg_card_back;
   background: transparent;
-  opacity: 0.4;
+  opacity: 0.3;
 }
 
 .center-panel {

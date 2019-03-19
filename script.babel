@@ -1036,7 +1036,7 @@ class Game extends React.Component {
 
     // Decide which cards to play
     const move = pickCards(
-      cards,
+      cards.filter(card => card > 0), // leave out zeroes for already played cards
       lastPlayedCards.length,
       lastPlayedCards.length ? resolveValue(lastPlayedCards).value : 14
     );
@@ -1301,7 +1301,7 @@ function pickCards(cards, n = 0, ceiling = 14) {
   }
 
   // Stuck with only jesters?
-  if (ceiling > 13 && new Set(cards).size === 1 && cards[0] === 13) {
+  if (ceiling > 13 && cards.every(card => card === 13)) {
     return Array(cards.length).fill(13);
   }
 

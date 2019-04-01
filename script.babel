@@ -1,4 +1,4 @@
-// const { CSSTransition, TransitionGroup } = ReactTransitionGroup
+const { TransitionGroup, CSSTransition } = ReactTransitionGroup;
 
 const DEBUG = true;
 
@@ -239,27 +239,8 @@ function Moves(props) {
   // Add current moves
   // addMoves(moves, props.moves);
 
-  return (
-    <div id="moves" className="moves">
-      {props.moves.map(
-        (move, i) =>
-          !move.alreadyOut && (
-            <Move
-              key={i}
-              // opening={move.opening}
-              // previous={move.previous}
-              number={move.number}
-              name={move.name}
-              cards={move.cards}
-            />
-          )
-      )}
-    </div>
-  );
-
   // return (
-  //   <div>
-  //     <CSSTransition in={true} timeout={200} classNames="moves">
+  //   <div id="moves" className="moves">
   //     {props.moves.map(
   //       (move, i) =>
   //         !move.alreadyOut && (
@@ -273,9 +254,28 @@ function Moves(props) {
   //           />
   //         )
   //     )}
-  //       </CSSTransition>
   //   </div>
   // );
+
+  return (
+    <div id="moves" className="moves">
+      {props.moves.map(
+        (move, i) =>
+          !move.alreadyOut && (
+            <CSSTransition in={true} timeout={200}>
+              <Move
+                key={i}
+                // opening={move.opening}
+                // previous={move.previous}
+                number={move.number}
+                name={move.name}
+                cards={move.cards}
+              />
+            </CSSTransition>
+          )
+      )}
+    </div>
+  );
 }
 
 function TitleChar(props) {

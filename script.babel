@@ -1,6 +1,7 @@
 const DEBUG = true;
 const { CSSTransition } = ReactTransitionGroup;
 
+
 // Enum for possible game phases
 const Phases = Object.freeze({
   TAXES: Symbol("taxes"),
@@ -1505,9 +1506,9 @@ function shakePlayButton(ms = 500) {
 
 /**
  * Copied from
- * https://github.com/AaronCCWong/react-card-flip/blob/0.5.0/src/ReactCardFlip.jsx
+ * https://github.com/AaronCCWong/react-card-flip/blob/0.6.0/src/ReactCardFlip.jsx
  *
- * TODO: figure out how to properly import it in codepen...
+ * TODO: figure out how to properly add it as an external script in codepen...
  */
 class ReactCardFlip extends React.Component {
   constructor(props) {
@@ -1537,7 +1538,8 @@ class ReactCardFlip extends React.Component {
       infinite,
       flipSpeedFrontToBack,
       flipSpeedBackToFront,
-      cardStyles: { front, back }
+      cardStyles: { front, back },
+      cardZIndex
     } = this.props;
     const { isFlipped, rotation } = this.state;
 
@@ -1556,37 +1558,38 @@ class ReactCardFlip extends React.Component {
 
     const styles = {
       container: {
-        perspective: "1000px",
-        transformStyle: "preserve-3d"
+        perspective: '1000px',
+        transformStyle: 'preserve-3d',
+        zIndex: `${cardZIndex}`
       },
       flipper: {
-        position: "relative",
-        transformStyle: "preserve-3d"
+        position: 'relative',
+        transformStyle: 'preserve-3d'
       },
       front: {
-        WebkitBackfaceVisibility: "hidden",
-        backfaceVisibility: "hidden",
-        left: "0",
-        visibility: isFlipped ? "hidden" : "",
-        position: isFlipped ? "absolute" : "relative",
-        top: "0",
-        transform: flipDirection === "horizontal" ? frontRotateY : frontRotateX,
-        transformStyle: "preserve-3d",
-        width: "100%",
-        zIndex: "2",
+        WebkitBackfaceVisibility: 'hidden',
+        backfaceVisibility: 'hidden',
+        left: '0',
+        visibility: isFlipped ? 'hidden' : '',
+        position: isFlipped ? 'absolute' : 'relative',
+        top: '0',
+        transform: flipDirection === 'horizontal' ? frontRotateY : frontRotateX,
+        transformStyle: 'preserve-3d',
+        width: '100%',
+        zIndex: '2',
         transition: `${flipSpeedBackToFront}s`,
         ...front
       },
       back: {
-        WebkitBackfaceVisibility: "hidden",
-        backfaceVisibility: "hidden",
-        left: "0",
-        visibility: isFlipped ? "" : "hidden",
-        position: isFlipped ? "relative" : "absolute",
-        transform: flipDirection === "horizontal" ? backRotateY : backRotateX,
-        transformStyle: "preserve-3d",
-        top: "0",
-        width: "100%",
+        WebkitBackfaceVisibility: 'hidden',
+        backfaceVisibility: 'hidden',
+        left: '0',
+        visibility: isFlipped ? '' : 'hidden',
+        position: isFlipped ? 'relative' : 'absolute',
+        transform: flipDirection === 'horizontal' ? backRotateY : backRotateX,
+        transformStyle: 'preserve-3d',
+        top: '0',
+        width: '100%',
         transition: `${flipSpeedFrontToBack}s`,
         ...back
       }
@@ -1596,11 +1599,11 @@ class ReactCardFlip extends React.Component {
       <div className="react-card-flip" style={styles.container}>
         <div className="react-card-flipper" style={styles.flipper}>
           <div className="react-card-front" style={styles.front}>
-            {this.getComponent("front")}
+            {this.getComponent('front')}
           </div>
 
           <div className="react-card-back" style={styles.back}>
-            {this.getComponent("back")}
+            {this.getComponent('back')}
           </div>
         </div>
       </div>
@@ -1613,6 +1616,7 @@ ReactCardFlip.propTypes = {
     front: PropTypes.object,
     back: PropTypes.object
   }),
+  cardZIndex: PropTypes.string,
   children: (props, propName, componentName) => {
     if (React.Children.count(props[propName]) !== 2) {
       return new Error(`${componentName} requires two children.`);
@@ -1625,15 +1629,15 @@ ReactCardFlip.propTypes = {
 
     if (
       !(
-        typeof props[propName] === "string" || props[propName] instanceof String
+        typeof props[propName] === 'string' || props[propName] instanceof String
       )
     ) {
       return new Error(`${propName} requires a string.`);
     }
 
     if (
-      props[propName].toLowerCase() !== "horizontal" &&
-      props[propName].toLowerCase() !== "vertical"
+      props[propName].toLowerCase() !== 'horizontal' &&
+      props[propName].toLowerCase() !== 'vertical'
     ) {
       return new Error(
         `${propName} expects (horizontal|vertical), got ${props[
@@ -1653,9 +1657,10 @@ ReactCardFlip.defaultProps = {
     front: {},
     back: {}
   },
+  cardZIndex: 'auto',
+  flipDirection: 'horizontal',
   flipSpeedBackToFront: 0.6,
   flipSpeedFrontToBack: 0.6,
   infinite: false,
-  isFlipped: false,
-  flipDirection: "horizontal"
+  isFlipped: false
 };

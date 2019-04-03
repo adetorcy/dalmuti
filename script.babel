@@ -183,8 +183,8 @@ function Move(props) {
   const cards = props.cards;
   const size = props.cards.length;
 
-  // If more than 6 of a kind, display a summary
-  if (size > 6) {
+  // If 6 or more of a kind, display a summary
+  if (size > 5) {
     const nbJesters = cards.filter(card => card === 13).length;
     label = `${size} ${cards[0]}s`;
 

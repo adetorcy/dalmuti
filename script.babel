@@ -1,6 +1,5 @@
-const { TransitionGroup, CSSTransition } = ReactTransitionGroup;
-
 const DEBUG = true;
+const { CSSTransition } = ReactTransitionGroup;
 
 // Enum for possible game phases
 const Phases = Object.freeze({
@@ -181,7 +180,7 @@ function PlayerRank(props) {
 function Move(props) {
   let label;
   const name = getName(props.name);
-  let classNames = "move";
+  // let classNames = "move";
   const size = props.cards.length;
 
   //   if (props.opening) {
@@ -204,7 +203,7 @@ function Move(props) {
   }
 
   return (
-    <div className={classNames}>
+    <div className="move">
       <nobr>{`${name}: ${label}`}</nobr>
     </div>
   );
@@ -215,29 +214,29 @@ function Moves(props) {
   //   return null;
   // }
 
-  //   const moves = [];
+  const moves = [];
 
-  //   const addMoves = (dest, src, previous = false) => {
-  //     for (move of src) {
-  //       // Skip moves from players already out
-  //       if (!move.alreadyOut) {
-  //         dest.push({ ...move, previous: previous });
-  //       }
-  //     }
+  const addMoves = (dest, src, previous = false) => {
+    for (move of src) {
+      // Skip moves from players already out
+      if (!move.alreadyOut) {
+        dest.push({ ...move, previous: previous });
+      }
+    }
 
-  //     // Mark opening move, in case we want to inspect the history
-  //     if (dest.length) {
-  //       dest[0].opening = true;
-  //     }
-  //   };
+    // Mark opening move, in case we want to inspect the history
+    // if (dest.length) {
+    //   dest[0].opening = true;
+    // }
+  };
 
   // Get previous moves from history
-  // for (const round of props.history) {
-  //   addMoves(moves, round, true);
-  // }
+  for (const round of props.history) {
+    addMoves(moves, round, true);
+  }
 
   // Add current moves
-  // addMoves(moves, props.moves);
+  addMoves(moves, props.moves);
 
   // return (
   //   <div id="moves" className="moves">
@@ -257,23 +256,38 @@ function Moves(props) {
   //   </div>
   // );
 
+  const animClasses = {
+    appear: null,
+    appearActive: "rubberBand",
+    enter: "rubberBand",
+    enterActive: "rubberBand",
+    enterDone: "rubberBand",
+    exit: "bounceOut",
+    exitActive: "fadeOutRight", // animate.css
+    exitDone: "bounceOut"
+  };
+
   return (
     <div id="moves" className="moves">
-      {props.moves.map(
-        (move, i) =>
-          !move.alreadyOut && (
-            <CSSTransition in={true} timeout={200}>
-              <Move
-                key={i}
-                // opening={move.opening}
-                // previous={move.previous}
-                number={move.number}
-                name={move.name}
-                cards={move.cards}
-              />
-            </CSSTransition>
-          )
-      )}
+      {moves.map((move, i) => (
+        <CSSTransition
+          key={i}
+          in={!move.previous}
+          classNames={animClasses}
+          timeout={200}
+          unmountOnExit={true}
+        >
+          <Move
+            className="animated"
+            // key={i}
+            // opening={move.opening}
+            // previous={move.previous}
+            number={move.number}
+            name={move.name}
+            cards={move.cards}
+          />
+        </CSSTransition>
+      ))}
     </div>
   );
 }
@@ -1165,7 +1179,7 @@ class Game extends React.Component {
                     <Moves
                       // active={this.state.phase === Phases.ONGOING}
                       moves={this.state.moves}
-                      // history={this.state.history}
+                      history={this.state.history}
                     />
                   )}
                 </div>

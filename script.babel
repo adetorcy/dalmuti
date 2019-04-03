@@ -379,6 +379,7 @@ class Game extends React.Component {
 
     this.setState(state => ({
       initialized: true,
+      showCards: false,
       phase: Phases.TAXES,
       callingRevolution: null, // rank of player calling it
       ranks: ranks,

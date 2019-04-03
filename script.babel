@@ -180,23 +180,23 @@ function PlayerRank(props) {
 function Move(props) {
   let label;
   const name = getName(props.name);
-  // let classNames = "move";
+  const cards = props.cards;
   const size = props.cards.length;
 
-  //   if (props.opening) {
-  //     classNames += " opening";
-  //   }
+  // If more than 6 of a kind, display a summary
+  if (size > 6) {
+    const nbJesters = cards.filter(card => card === 13).length;
+    label = `${size} ${cards[0]}s`;
 
-  //   if (props.previous) {
-  //     classNames += " previous-move";
-  //   }
-
-  if (size > 1) {
-    // Multiple cards
-    label = props.cards.map(x => (x === 13 ? "J" : x)).toString();
+    if (nbJesters) {
+      label += ` (with ${nbJesters} ${nbJesters > 1 ? "jesters" : "jester"})`;
+    }
+  } else if (size > 1) {
+    // Display card array as is
+    label = cards.map(x => (x === 13 ? "J" : x)).toString();
   } else if (size === 1) {
     // Single card. Jester is worth 13
-    label = props.cards.toString();
+    label = cards.toString();
   } else {
     // Player is passing
     label = "pass";
@@ -210,10 +210,6 @@ function Move(props) {
 }
 
 function Moves(props) {
-  // if (!props.active) {
-  //   return null;
-  // }
-
   const moves = [];
 
   const addMoves = (dest, src, previous = false) => {
@@ -223,11 +219,6 @@ function Moves(props) {
         dest.push({ ...move, previous: previous });
       }
     }
-
-    // Mark opening move, in case we want to inspect the history
-    // if (dest.length) {
-    //   dest[0].opening = true;
-    // }
   };
 
   // Get previous moves from history
@@ -237,24 +228,6 @@ function Moves(props) {
 
   // Add current moves
   addMoves(moves, props.moves);
-
-  // return (
-  //   <div id="moves" className="moves">
-  //     {props.moves.map(
-  //       (move, i) =>
-  //         !move.alreadyOut && (
-  //           <Move
-  //             key={i}
-  //             // opening={move.opening}
-  //             // previous={move.previous}
-  //             number={move.number}
-  //             name={move.name}
-  //             cards={move.cards}
-  //           />
-  //         )
-  //     )}
-  //   </div>
-  // );
 
   const animClasses = {
     appear: null,
@@ -279,9 +252,6 @@ function Moves(props) {
         >
           <Move
             className="animated"
-            // key={i}
-            // opening={move.opening}
-            // previous={move.previous}
             number={move.number}
             name={move.name}
             cards={move.cards}
@@ -325,9 +295,6 @@ function MainTitle(props) {
 }
 
 function TaxMessage(props) {
-  // if (!props.active) {
-  //   return null;
-  // }
   const messages = [
     "Let the Greater Peon have your worst two cards. Don't feel bad, they deserve it.",
     "You get to give your worst card to the Lesser Peon.",
@@ -344,10 +311,6 @@ function TaxMessage(props) {
 }
 
 function RevolutionMessage(props) {
-  // if (!props.active) {
-  //   return null;
-  // }
-
   const message = `The ${getRankName(
     props.rank
   )} is calling a revolution. No taxes this time!`;
@@ -355,16 +318,10 @@ function RevolutionMessage(props) {
 }
 
 function ReadyMessage(props) {
-  // if (!props.active) {
-  //   return null;
-  // }
-  return <div className="play-prompt">Press play for the game to start</div>;
+  return <div className="center-message play-prompt">Press play for the game to start</div>;
 }
 
 function Score(props) {
-  // if (!props.active) {
-  //   return null;
-  // }
   return <div className="score">{`Score: ${props.score}`}</div>;
 }
 
@@ -1158,26 +1115,22 @@ class Game extends React.Component {
                 <div className="center-panel">
                   {this.state.phase === Phases.TAXES && (
                     <TaxMessage
-                      // active={this.state.phase === Phases.TAXES}
                       rank={this.state.ranks[0]}
                     />
                   )}
                   {this.state.callingRevolution != null && (
                     <RevolutionMessage
-                      // active={this.state.callingRevolution != null}
                       rank={this.state.callingRevolution}
                     />
                   )}
                   {this.state.phase === Phases.READY && <ReadyMessage />}
                   {this.state.phase === Phases.OVER && (
                     <Score
-                      // active={this.state.phase === Phases.OVER}
                       score={this.state.score}
                     />
                   )}
                   {this.state.phase === Phases.ONGOING && (
                     <Moves
-                      // active={this.state.phase === Phases.ONGOING}
                       moves={this.state.moves}
                       history={this.state.history}
                     />

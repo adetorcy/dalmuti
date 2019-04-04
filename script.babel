@@ -48,7 +48,7 @@ function PlayerHand(props) {
 }
 
 function PlayerButton(props) {
-  let classNames = "btn btn-sm shadow-none player-button";
+  let classNames = "btn shadow-none player-button";
 
   if (props.wide) {
     classNames += " wide-button";
@@ -67,7 +67,7 @@ function PlayerButton(props) {
 }
 
 function ResetButton(props) {
-  let classNames = "btn btn-sm shadow-none reset-button";
+  let classNames = "btn shadow-none reset-button";
 
   if (props.welcome) {
     classNames += " wide-button";

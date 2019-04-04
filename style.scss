@@ -255,7 +255,7 @@ button {
   display: flex;
   flex-direction: row;
   // justify-content: center;
-  justify-content: space-around;
+  justify-content: space-e;
   margin-bottom: 15px;
 }
 
@@ -275,10 +275,6 @@ button {
   font-size: 14px;
   // margin-left: 15px;
   // margin-right: 15px;
-}
-
-.wide-button {
-  width: 120px;
 }
 
 .player-button:disabled {

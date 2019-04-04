@@ -50,10 +50,6 @@ function PlayerHand(props) {
 function PlayerButton(props) {
   let classNames = "btn shadow-none player-button";
 
-  if (props.wide) {
-    classNames += " wide-button";
-  }
-
   return (
     <button
       id={props.id}
@@ -68,10 +64,6 @@ function PlayerButton(props) {
 
 function ResetButton(props) {
   let classNames = "btn shadow-none reset-button";
-
-  if (props.welcome) {
-    classNames += " wide-button";
-  }
 
   return (
     <button className={classNames} onClick={() => props.onClick()}>
@@ -1197,7 +1189,6 @@ class Game extends React.Component {
                   onClick={() =>
                     this.setState(state => ({ showCards: !state.showCards }))
                   }
-                  wide={true}
                   label={this.state.showCards ? "Hide Cards" : "Show Cards"}
                   active={this.state.out.length != 5}
                 />

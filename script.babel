@@ -223,14 +223,8 @@ function Moves(props) {
   addMoves(moves, props.moves);
 
   const animClasses = {
-    appear: null,
-    appearActive: "rubberBand",
-    enter: "rubberBand",
-    enterActive: "rubberBand",
-    enterDone: "rubberBand",
-    exit: "bounceOut",
-    exitActive: "fadeOutRight", // animate.css
-    exitDone: "bounceOut"
+    exit: "animated",
+    exitActive: "fadeOutRight", // from animate.css
   };
 
   return (

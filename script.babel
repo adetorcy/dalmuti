@@ -223,7 +223,7 @@ function Moves(props) {
   addMoves(moves, props.moves);
 
   const animClasses = {
-    exit: "animated",
+    exit: "animated slow",
     exitActive: "fadeOutRightBig", // from animate.css
   };
 

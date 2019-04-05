@@ -224,7 +224,7 @@ function Moves(props) {
 
   const animClasses = {
     exit: "animated",
-    exitActive: "fadeOutRight", // from animate.css
+    exitActive: "fadeOutRightBig", // from animate.css
   };
 
   return (
@@ -234,7 +234,7 @@ function Moves(props) {
           key={i}
           in={!move.previous}
           classNames={animClasses}
-          timeout={200}
+          timeout={300}
           unmountOnExit={true}
         >
           <Move

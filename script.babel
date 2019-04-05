@@ -234,7 +234,7 @@ function Moves(props) {
           key={i}
           in={!move.previous}
           classNames={animClasses}
-          timeout={300}
+          timeout={500}
           unmountOnExit={true}
         >
           <Move

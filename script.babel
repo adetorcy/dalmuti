@@ -1,7 +1,6 @@
 const DEBUG = true;
 const { CSSTransition } = ReactTransitionGroup;
 
-
 // Enum for possible game phases
 const Phases = Object.freeze({
   TAXES: Symbol("taxes"),
@@ -177,14 +176,16 @@ function Move(props) {
   const size = props.cards.length;
 
   // If 6 or more of a kind, display a summary
-  if (size > 5) {
-    const nbJesters = cards.filter(card => card === 13).length;
-    label = `${size} ${cards[0]}s`;
+  //   if (size > 5) {
+  //     const nbJesters = cards.filter(card => card === 13).length;
+  //     label = `${size} ${cards[0]}s`;
 
-    if (nbJesters) {
-      label += ` (with ${nbJesters} ${nbJesters > 1 ? "jesters" : "jester"})`;
-    }
-  } else if (size > 1) {
+  //     if (nbJesters) {
+  //       label += ` (with ${nbJesters} ${nbJesters > 1 ? "jesters" : "jester"})`;
+  //     }
+  //   } else
+
+  if (size > 1) {
     // Display card array as is
     label = cards.map(x => (x === 13 ? "J" : x)).toString();
   } else if (size === 1) {
@@ -224,7 +225,7 @@ function Moves(props) {
 
   const animClasses = {
     exit: "animated slow",
-    exitActive: "fadeOutRightBig", // from animate.css
+    exitActive: "fadeOutRightBig" // from animate.css
   };
 
   return (
@@ -305,7 +306,11 @@ function RevolutionMessage(props) {
 }
 
 function ReadyMessage(props) {
-  return <div className="center-message play-prompt">Press play for the game to start</div>;
+  return (
+    <div className="center-message play-prompt">
+      Press play for the game to start
+    </div>
+  );
 }
 
 function Score(props) {
@@ -1102,20 +1107,14 @@ class Game extends React.Component {
                 <div className="top-message">Message</div>
                 <div className="center-panel">
                   {this.state.phase === Phases.TAXES && (
-                    <TaxMessage
-                      rank={this.state.ranks[0]}
-                    />
+                    <TaxMessage rank={this.state.ranks[0]} />
                   )}
                   {this.state.callingRevolution != null && (
-                    <RevolutionMessage
-                      rank={this.state.callingRevolution}
-                    />
+                    <RevolutionMessage rank={this.state.callingRevolution} />
                   )}
                   {this.state.phase === Phases.READY && <ReadyMessage />}
                   {this.state.phase === Phases.OVER && (
-                    <Score
-                      score={this.state.score}
-                    />
+                    <Score score={this.state.score} />
                   )}
                   {this.state.phase === Phases.ONGOING && (
                     <Moves
@@ -1544,38 +1543,38 @@ class ReactCardFlip extends React.Component {
 
     const styles = {
       container: {
-        perspective: '1000px',
-        transformStyle: 'preserve-3d',
+        perspective: "1000px",
+        transformStyle: "preserve-3d",
         zIndex: `${cardZIndex}`
       },
       flipper: {
-        position: 'relative',
-        transformStyle: 'preserve-3d'
+        position: "relative",
+        transformStyle: "preserve-3d"
       },
       front: {
-        WebkitBackfaceVisibility: 'hidden',
-        backfaceVisibility: 'hidden',
-        left: '0',
-        visibility: isFlipped ? 'hidden' : '',
-        position: isFlipped ? 'absolute' : 'relative',
-        top: '0',
-        transform: flipDirection === 'horizontal' ? frontRotateY : frontRotateX,
-        transformStyle: 'preserve-3d',
-        width: '100%',
-        zIndex: '2',
+        WebkitBackfaceVisibility: "hidden",
+        backfaceVisibility: "hidden",
+        left: "0",
+        visibility: isFlipped ? "hidden" : "",
+        position: isFlipped ? "absolute" : "relative",
+        top: "0",
+        transform: flipDirection === "horizontal" ? frontRotateY : frontRotateX,
+        transformStyle: "preserve-3d",
+        width: "100%",
+        zIndex: "2",
         transition: `${flipSpeedBackToFront}s`,
         ...front
       },
       back: {
-        WebkitBackfaceVisibility: 'hidden',
-        backfaceVisibility: 'hidden',
-        left: '0',
-        visibility: isFlipped ? '' : 'hidden',
-        position: isFlipped ? 'relative' : 'absolute',
-        transform: flipDirection === 'horizontal' ? backRotateY : backRotateX,
-        transformStyle: 'preserve-3d',
-        top: '0',
-        width: '100%',
+        WebkitBackfaceVisibility: "hidden",
+        backfaceVisibility: "hidden",
+        left: "0",
+        visibility: isFlipped ? "" : "hidden",
+        position: isFlipped ? "relative" : "absolute",
+        transform: flipDirection === "horizontal" ? backRotateY : backRotateX,
+        transformStyle: "preserve-3d",
+        top: "0",
+        width: "100%",
         transition: `${flipSpeedFrontToBack}s`,
         ...back
       }
@@ -1585,11 +1584,11 @@ class ReactCardFlip extends React.Component {
       <div className="react-card-flip" style={styles.container}>
         <div className="react-card-flipper" style={styles.flipper}>
           <div className="react-card-front" style={styles.front}>
-            {this.getComponent('front')}
+            {this.getComponent("front")}
           </div>
 
           <div className="react-card-back" style={styles.back}>
-            {this.getComponent('back')}
+            {this.getComponent("back")}
           </div>
         </div>
       </div>
@@ -1615,15 +1614,15 @@ ReactCardFlip.propTypes = {
 
     if (
       !(
-        typeof props[propName] === 'string' || props[propName] instanceof String
+        typeof props[propName] === "string" || props[propName] instanceof String
       )
     ) {
       return new Error(`${propName} requires a string.`);
     }
 
     if (
-      props[propName].toLowerCase() !== 'horizontal' &&
-      props[propName].toLowerCase() !== 'vertical'
+      props[propName].toLowerCase() !== "horizontal" &&
+      props[propName].toLowerCase() !== "vertical"
     ) {
       return new Error(
         `${propName} expects (horizontal|vertical), got ${props[
@@ -1643,8 +1642,8 @@ ReactCardFlip.defaultProps = {
     front: {},
     back: {}
   },
-  cardZIndex: 'auto',
-  flipDirection: 'horizontal',
+  cardZIndex: "auto",
+  flipDirection: "horizontal",
   flipSpeedBackToFront: 0.6,
   flipSpeedFrontToBack: 0.6,
   infinite: false,
